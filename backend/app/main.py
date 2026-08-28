@@ -32,6 +32,12 @@ app.add_middleware(
 
 app.include_router(router)
 
+# Serve uploaded images as static files → /uploads/{result_id}.jpg
+from fastapi.staticfiles import StaticFiles
+import os
+os.makedirs("data/uploads", exist_ok=True)
+app.mount("/uploads", StaticFiles(directory="data/uploads"), name="uploads")
+
 
 @app.on_event("startup")
 def startup():

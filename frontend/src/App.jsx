@@ -1,6 +1,7 @@
 import { Routes, Route, NavLink } from 'react-router-dom'
 import AnalyzePage from './pages/AnalyzePage'
 import HistoryPage from './pages/HistoryPage'
+import ResultDetailPage from './pages/ResultDetailPage'
 
 export default function App() {
   return (
@@ -15,8 +16,9 @@ export default function App() {
         </div>
       </nav>
       <Routes>
-        <Route path="/"        element={<AnalyzePage />} />
-        <Route path="/history" element={<HistoryPage />} />
+        <Route path="/"              element={<AnalyzePage />} />
+        <Route path="/history"       element={<HistoryPage />} />
+        <Route path="/results/:id"   element={<ResultDetailPage />} />
       </Routes>
     </div>
   )

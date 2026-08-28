@@ -20,6 +20,7 @@ class AnalysisResponse(BaseModel):
     features: dict[str, float]
     feature_importance: dict[str, dict[str, float]]
     heatmap: Optional[list[list[float]]] = None
+    thumbnail_url: Optional[str] = None
     created_at: datetime
 
     class Config:
@@ -32,6 +33,7 @@ class AnalysisListItem(BaseModel):
     quality_score: float
     quality_label: str
     issue_count: int
+    thumbnail_url: Optional[str] = None
     created_at: datetime
 
     class Config:

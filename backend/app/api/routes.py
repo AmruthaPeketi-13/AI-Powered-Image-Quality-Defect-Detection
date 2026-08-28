@@ -3,9 +3,10 @@ import json
 import uuid
 from datetime import datetime, timezone
 from io import BytesIO
+from pathlib import Path
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
-from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from PIL import Image, UnidentifiedImageError
 from sqlalchemy.orm import Session
 
@@ -17,6 +18,9 @@ from app.core.model import model_is_ready, predict
 from app.core.quality_scorer import compute_quality_score
 from app.db.database import get_db
 from app.db.models import AnalysisResult
+
+UPLOADS_DIR = Path("data/uploads")
+UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
 
 router = APIRouter()
 
@@ -87,8 +91,14 @@ async def analyze_image(
     # --- Heatmap (bonus explainability) ---
     heatmap = compute_sharpness_heatmap(pil_img)
 
-    # --- Persist to DB ---
+    # --- Persist image to disk (for thumbnail in history) ---
     result_id = str(uuid.uuid4())
+    img_save_path = UPLOADS_DIR / f"{result_id}.jpg"
+    pil_img.save(str(img_save_path), format="JPEG", quality=85)
+
+    thumbnail_url = f"/uploads/{result_id}.jpg"
+
+    # --- Persist to DB ---
     db_record = AnalysisResult(
         id=result_id,
         filename=file.filename or "unknown",
@@ -98,6 +108,7 @@ async def analyze_image(
         features_json=json.dumps(features),
         feature_importance_json=json.dumps(feat_importance),
         heatmap_json=json.dumps(heatmap),
+        thumbnail_url=thumbnail_url,
         created_at=datetime.now(timezone.utc),
     )
     db.add(db_record)
@@ -113,6 +124,7 @@ async def analyze_image(
         features=features,
         feature_importance=feat_importance,
         heatmap=heatmap,
+        thumbnail_url=thumbnail_url,
         created_at=db_record.created_at,
     )
 
@@ -136,6 +148,7 @@ def list_results(skip: int = 0, limit: int = 50, db: Session = Depends(get_db)):
             quality_score=r.quality_score,
             quality_label=r.quality_label,
             issue_count=len(r.issues),
+            thumbnail_url=r.thumbnail_url,
             created_at=r.created_at,
         )
         for r in records
@@ -157,5 +170,6 @@ def get_result(result_id: str, db: Session = Depends(get_db)):
         features=record.features,
         feature_importance=record.feature_importance,
         heatmap=json.loads(record.heatmap_json) if record.heatmap_json else None,
+        thumbnail_url=record.thumbnail_url,
         created_at=record.created_at,
     )

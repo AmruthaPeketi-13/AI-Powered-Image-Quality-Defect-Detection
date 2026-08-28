@@ -19,6 +19,7 @@ class AnalysisResult(Base):
     features_json = Column(Text, nullable=False, default="{}")
     feature_importance_json = Column(Text, nullable=False, default="{}")
     heatmap_json = Column(Text, nullable=True)  # Optional 8×8 sharpness grid
+    thumbnail_url = Column(String, nullable=True)  # /uploads/{id}.jpg
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     # ---------- helpers ----------

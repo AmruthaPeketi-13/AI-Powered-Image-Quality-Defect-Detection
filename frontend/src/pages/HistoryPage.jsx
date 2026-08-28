@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getResults } from '../api/client'
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const LABEL_COLORS = { ACCEPTABLE: '#10b981', DEGRADED: '#f59e0b', DEFECTIVE: '#ef4444' }
 
 export default function HistoryPage() {
@@ -36,6 +37,7 @@ export default function HistoryPage() {
           <table className="history-table" id="history-table">
             <thead>
               <tr>
+                <th style={{ width: 64 }}>Image</th>
                 <th>Filename</th>
                 <th>Score</th>
                 <th>Label</th>
@@ -46,6 +48,18 @@ export default function HistoryPage() {
             <tbody>
               {records.map(r => (
                 <tr key={r.id} onClick={() => navigate(`/results/${r.id}`)}>
+                  <td>
+                    {r.thumbnail_url ? (
+                      <img
+                        src={`${API_BASE}${r.thumbnail_url}`}
+                        alt={r.filename}
+                        style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 6, display: 'block' }}
+                        onError={e => { e.target.style.display = 'none' }}
+                      />
+                    ) : (
+                      <div style={{ width: 48, height: 48, background: 'rgba(255,255,255,0.05)', borderRadius: 6, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.2rem' }}>🖼️</div>
+                    )}
+                  </td>
                   <td style={{ fontWeight: 500 }}>{r.filename}</td>
                   <td style={{ fontWeight: 700, color: LABEL_COLORS[r.quality_label] }}>
                     {r.quality_score}

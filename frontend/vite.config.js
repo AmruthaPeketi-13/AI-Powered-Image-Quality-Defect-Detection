@@ -6,8 +6,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/analyze': 'http://localhost:8000',
-      '/results': 'http://localhost:8000',
-      '/health':  'http://localhost:8000',
+      '/results':  'http://localhost:8000',
+      '/health':   'http://localhost:8000',
+      '/uploads':  'http://localhost:8000',  // thumbnail static files
     }
   }
 })
