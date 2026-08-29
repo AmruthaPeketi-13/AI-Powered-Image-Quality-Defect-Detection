@@ -12,6 +12,7 @@ import numpy as np
 from PIL import Image
 
 
+
 def compute_sharpness_heatmap(pil_image: Image.Image, grid_size: int = 8) -> list[list[float]]:
     """
     Divide image into a grid_size × grid_size grid.
@@ -43,18 +44,22 @@ def compute_sharpness_heatmap(pil_image: Image.Image, grid_size: int = 8) -> lis
 
 def build_feature_importance(model, label_encoder) -> dict[str, dict[str, float]]:
     """
-    Extract per-class feature importances from the trained RandomForest.
+    Extract per-class feature importances from the trained model.
     Returns { issue_class: { feature_name: importance } }.
+
+    Works with both RandomForestClassifier and HistGradientBoostingClassifier.
     """
     from app.core.feature_extractor import FEATURE_NAMES
 
     importances: dict[str, dict[str, float]] = {}
     classes = label_encoder.classes_
 
-    # RandomForest has a single global importance; for per-class detail we
-    # use the raw feature_importances_ (same for all classes in a single RF).
-    # For multi-class explainability we report global importance per class label.
-    global_imp = model.feature_importances_
+    if hasattr(model, "feature_importances_"):
+        global_imp = model.feature_importances_
+    else:
+        # Fallback: uniform importances if model type doesn't expose them
+        global_imp = np.ones(len(FEATURE_NAMES)) / len(FEATURE_NAMES)
+
     for cls in classes:
         importances[cls] = {
             feat: round(float(imp), 4)

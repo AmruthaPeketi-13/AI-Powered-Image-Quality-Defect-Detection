@@ -92,14 +92,17 @@ def plot_roc_curves(model, le, X_test, y_test):
 
 
 def plot_feature_importance(model, le):
+    if not hasattr(model, "feature_importances_"):
+        print("Model has no feature_importances_ — skipping importance plot.")
+        return
     imp = model.feature_importances_
     indices = np.argsort(imp)[::-1]
-    fig, ax = plt.subplots(figsize=(10, 5))
+    fig, ax = plt.subplots(figsize=(11, 5))
     colors = sns.color_palette("viridis", len(FEATURE_NAMES))
     ax.bar(range(len(FEATURE_NAMES)), imp[indices], color=[colors[i] for i in indices])
     ax.set_xticks(range(len(FEATURE_NAMES)))
     ax.set_xticklabels([FEATURE_NAMES[i] for i in indices], rotation=35, ha="right")
-    ax.set_title("Random Forest — Global Feature Importances")
+    ax.set_title("GradientBoosting — Global Feature Importances")
     ax.set_ylabel("Importance")
     plt.tight_layout()
     path = PLOT_DIR / "feature_importance.png"
