@@ -5,11 +5,16 @@ The database backend is selected via the DATABASE_URL environment variable
   - Local:      sqlite:///./data/results.db  (default)
   - Supabase:   postgresql://user:pass@host:port/dbname
 """
+import logging
+import time
+
 from sqlalchemy import create_engine
 from sqlalchemy.engine import make_url
 from sqlalchemy.orm import declarative_base, sessionmaker  # declarative_base moved to orm in SA 2.0
 
 from app.config import settings
+
+logger = logging.getLogger("uvicorn.error")
 
 
 def _engine_url(url: str) -> str:
@@ -59,6 +64,41 @@ def get_db():
         db.close()
 
 
-def init_db():
-    """Create all tables on startup."""
-    Base.metadata.create_all(bind=engine)
+def init_db(retries=5, delay=3.0):
+    """Create all tables on startup.
+
+    Connection attempts are retried so a transient network blip during a cold
+    start (common with managed Postgres like Supabase) does not crash the app.
+    """
+    last_exc = None
+    for attempt in range(1, retries + 1):
+        try:
+            Base.metadata.create_all(bind=engine)
+            _log_connection()
+            return
+        except Exception as exc:  # noqa: BLE001 - connection errors are retried
+            last_exc = exc
+            logger.warning(
+                "DB init attempt %d/%d failed: %s", attempt, retries, exc
+            )
+            if attempt < retries:
+                time.sleep(delay)
+    raise last_exc
+
+
+def _log_connection():
+    """Log the resolved DB host for easy debugging (never logs the password)."""
+    url = _engine_url(settings.database_url)
+    if url.startswith("postgresql"):
+        try:
+            parsed = make_url(url)
+            logger.info(
+                "Connected to Postgres host=%s port=%s user=%s",
+                parsed.host or "(no host)",
+                parsed.port,
+                parsed.username,
+            )
+        except Exception:  # noqa: BLE001
+            logger.info("Connected to Postgres (host detail unavailable)")
+    else:
+        logger.info("Using local SQLite database")

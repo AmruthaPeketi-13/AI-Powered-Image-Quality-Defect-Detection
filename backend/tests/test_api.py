@@ -32,10 +32,11 @@ def client():
     _mock_predict.start()
     _mock_infer.start()
     from app.main import app
-    # Start with a clean table so history tests are deterministic.
-    from app.db.database import engine
+    # Ensure the table exists (creates it on first run), then start clean.
+    from app.db.database import init_db, engine
     from app.db.models import AnalysisResult
     from sqlalchemy import delete
+    init_db()
     with engine.begin() as conn:
         conn.execute(delete(AnalysisResult))
     with TestClient(app) as c:
