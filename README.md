@@ -14,6 +14,10 @@
 
 ImageIQ is a sophisticated tool designed to evaluate the technical quality of uploaded images. By extracting raw computer vision metrics (like Laplacian variance, RMS contrast, and edge density) and feeding them into a trained Random Forest model, ImageIQ provides an instant, explainable quality score alongside a detailed breakdown of detected issues.
 
+### 🔗 Live Demo
+- **Frontend (Vercel)**: [https://ai-powered-image-quality-defect-det-gold.vercel.app](https://ai-powered-image-quality-defect-det-gold.vercel.app)
+- **Backend API (Render)**: [https://ai-powered-image-quality-defect-detection-8m86.onrender.com](https://ai-powered-image-quality-defect-detection-8m86.onrender.com)
+
 ## ✨ Key Features
 
 - **🧠 Machine Learning Core**: Uses a Scikit-Learn Random Forest model trained on OpenCV metrics to classify images into quality buckets.
@@ -35,7 +39,7 @@ ImageIQ is a sophisticated tool designed to evaluate the technical quality of up
 **Backend:**
 - Python 3.11
 - FastAPI (REST API framework)
-- SQLite (Database)
+- PostgreSQL / Supabase (Database)
 - SQLAlchemy (ORM)
 - OpenCV / Pillow (Image processing)
 - Scikit-Learn (Machine Learning inference)
