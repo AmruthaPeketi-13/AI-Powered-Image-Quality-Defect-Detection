@@ -23,7 +23,7 @@ ImageIQ is a sophisticated tool designed to evaluate the technical quality of up
 - **🧠 Machine Learning Core**: Uses a Scikit-Learn Random Forest model trained on OpenCV metrics to classify images into quality buckets.
 - **🗺️ Explainable AI (XAI)**: Features an interactive 8x8 Sharpness Heatmap that dynamically maps to your image, visually explaining *where* the image is sharp or blurry.
 - **📊 Detailed Feature Breakdown**: View exactly what the AI sees, including brightness, noise estimates, saturation mean, and edge density.
-- **📚 Persistent History**: Automatically saves analysis results to a local SQLite database so you can review past uploads at any time.
+- **📚 Persistent History**: Automatically saves analysis results to a cloud PostgreSQL database (Supabase) so you can safely review past uploads at any time without data loss.
 - **🎨 Premium UI/UX**: Built with Vite and React, featuring a clean, responsive, light-mode interface optimized for both desktop and mobile.
 
 ---
