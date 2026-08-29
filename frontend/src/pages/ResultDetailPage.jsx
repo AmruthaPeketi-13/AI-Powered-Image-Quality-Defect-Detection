@@ -39,18 +39,22 @@ export default function ResultDetailPage() {
 
       {/* Image preview from stored thumbnail */}
       {result.thumbnail_url && (
-        <div className="card" style={{marginBottom:'1.5rem', padding:'1rem'}}>
-          <p className="section-title">Uploaded Image</p>
-          <img
-            src={result.thumbnail_url}
-            alt={result.filename}
-            style={{ maxHeight:280, maxWidth:'100%', borderRadius:8, objectFit:'cover', display:'block' }}
+        <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'flex-start', gap: '1rem', flexWrap: 'wrap' }}>
+        <div className="img-preview-wrap" style={{ flex: '0 0 auto' }}>
+          <img 
+            src={`http://localhost:8000${result.thumbnail_url}`} 
+            className="img-preview" 
+            alt="Analyzed image" 
+            style={{ maxWidth: 280 }}
           />
         </div>
+        <p className="text-muted">Analyzed on {new Date(result.created_at).toLocaleString()}</p>
+      </div>
       )}
 
       <div className="results-grid">
-        <div style={{ display:'flex', flexDirection:'column', gap:'1.5rem' }}>
+        {/* Left column: score + heatmap */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           <QualityCard score={result.quality_score} label={result.quality_label} />
           <div className="card">
             <HeatmapOverlay heatmap={result.heatmap} />

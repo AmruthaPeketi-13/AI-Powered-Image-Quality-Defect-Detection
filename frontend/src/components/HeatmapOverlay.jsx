@@ -1,4 +1,4 @@
-// HeatmapOverlay — renders an 8×8 sharpness grid over the image preview.
+// HeatmapOverlay — renders an 8×8 sharpness grid.
 // High value (1.0) = sharp (green), low (0.0) = blurry (red).
 
 const lerp = (a, b, t) => Math.round(a + (b - a) * t)
@@ -30,7 +30,7 @@ export default function HeatmapOverlay({ heatmap }) {
             key={i}
             className="heatmap-cell"
             title={`Cell sharpness: ${(v * 100).toFixed(1)}%`}
-            style={{ background: heatColor(v), opacity: 0.75, minHeight: 32 }}
+            style={{ background: heatColor(v), opacity: 1, minHeight: 32 }}
           />
         ))}
       </div>

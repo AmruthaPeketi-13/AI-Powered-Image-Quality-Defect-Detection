@@ -1,23 +1,23 @@
 /* ── Design System ─────────────────────────────────────────── */
 :root {
-  --bg-primary:    #0a0d14;
-  --bg-card:       #111827;
-  --bg-card-hover: #1a2235;
-  --border:        rgba(99, 102, 241, 0.15);
-  --border-hover:  rgba(99, 102, 241, 0.4);
-  --accent:        #6366f1;
-  --accent-glow:   rgba(99, 102, 241, 0.3);
+  --bg-primary:    #ffffff;
+  --bg-card:       #f8fafc;
+  --bg-card-hover: #f1f5f9;
+  --border:        #e2e8f0;
+  --border-hover:  #cbd5e1;
+  --accent:        #2563eb;
+  --accent-glow:   rgba(37, 99, 235, 0.2);
   --success:       #10b981;
   --warning:       #f59e0b;
   --danger:        #ef4444;
-  --text-primary:  #f1f5f9;
-  --text-secondary:#94a3b8;
+  --text-primary:  #0f172a;
+  --text-secondary:#334155;
   --text-muted:    #64748b;
-  --font:          'Inter', system-ui, sans-serif;
+  --font:          'Poppins', 'Inter', system-ui, sans-serif;
   --radius:        12px;
   --radius-sm:     8px;
-  --shadow:        0 4px 24px rgba(0,0,0,0.4);
-  --shadow-glow:   0 0 40px rgba(99,102,241,0.15);
+  --shadow:        0 4px 24px rgba(0,0,0,0.05);
+  --shadow-glow:   0 0 40px rgba(37, 99, 235, 0.1);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -35,23 +35,35 @@ body {
 
 /* ── Layout ────────────────────────────────────────────────── */
 .app-shell { display: flex; flex-direction: column; min-height: 100vh; }
+.app-shell.is-landing { background-color: #ffffff; }
 
 .navbar {
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 2rem;
   height: 64px;
-  background: rgba(10,13,20,0.85);
+  background: rgba(255,255,255,0.85);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; z-index: 100;
+  position: sticky; top: 0; z-index: 10000;
+}
+
+.navbar.navbar-landing {
+  background: transparent;
+  border-bottom: none;
+  position: absolute;
+  width: 100%;
 }
 
 .navbar-brand {
   display: flex; align-items: center; gap: 10px;
-  font-size: 1.2rem; font-weight: 700; color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem; font-weight: 800; color: #1e3a8a;
+  letter-spacing: 1px;
   text-decoration: none;
 }
 .navbar-brand span { color: var(--accent); }
+.navbar.navbar-landing .navbar-brand { color: #1e3a8a; }
+.navbar.navbar-landing .navbar-brand span { color: #3b82f6; }
 
 .navbar-links { display: flex; gap: 0.5rem; }
 .nav-link {
@@ -59,8 +71,14 @@ body {
   color: var(--text-secondary); text-decoration: none;
   transition: all 0.2s;
 }
+.navbar.navbar-landing .nav-link {
+  color: #475569;
+}
 .nav-link:hover, .nav-link.active {
   color: var(--text-primary); background: rgba(99,102,241,0.12);
+}
+.navbar.navbar-landing .nav-link:hover, .navbar.navbar-landing .nav-link.active {
+  color: #1e3a8a; background: rgba(59, 130, 246, 0.1);
 }
 
 .page { flex: 1; padding: 2rem; max-width: 1100px; margin: 0 auto; width: 100%; }
@@ -123,15 +141,15 @@ body {
 .issue-item {
   display: flex; align-items: center; justify-content: space-between;
   padding: 0.85rem 1rem;
-  background: rgba(255,255,255,0.03);
+  background: rgba(0,0,0,0.03);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   transition: all 0.2s;
 }
-.issue-item:hover { background: rgba(255,255,255,0.05); border-color: var(--border-hover); }
+.issue-item:hover { background: rgba(0,0,0,0.05); border-color: var(--border-hover); }
 .issue-name { font-weight: 600; text-transform: capitalize; font-size: 0.95rem; }
 .issue-right { display: flex; align-items: center; gap: 0.75rem; }
-.confidence-bar-wrap { width: 100px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 999px; overflow: hidden; }
+.confidence-bar-wrap { width: 100px; height: 6px; background: rgba(0,0,0,0.1); border-radius: 999px; overflow: hidden; }
 .confidence-bar { height: 100%; border-radius: 999px; transition: width 0.6s ease; }
 .sev-mild   { color: var(--warning);  font-size: 0.78rem; font-weight: 600; }
 .sev-medium { color: #fb923c;         font-size: 0.78rem; font-weight: 600; }
