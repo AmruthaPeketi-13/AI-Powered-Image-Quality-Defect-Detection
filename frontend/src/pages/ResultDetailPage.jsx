@@ -6,8 +6,6 @@ import IssueList from '../components/IssueList'
 import FeatureStats from '../components/FeatureStats'
 import HeatmapOverlay from '../components/HeatmapOverlay'
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
-
 export default function ResultDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -44,7 +42,7 @@ export default function ResultDetailPage() {
         <div className="card" style={{marginBottom:'1.5rem', padding:'1rem'}}>
           <p className="section-title">Uploaded Image</p>
           <img
-            src={`${API_BASE}${result.thumbnail_url}`}
+            src={result.thumbnail_url}
             alt={result.filename}
             style={{ maxHeight:280, maxWidth:'100%', borderRadius:8, objectFit:'cover', display:'block' }}
           />

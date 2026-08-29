@@ -1,15 +1,26 @@
 """FastAPI application factory."""
 import os
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.api.routes import router
 from app.db.database import init_db
 
-# Ensure data directory exists when running locally
-Path("data").mkdir(exist_ok=True)
+# Ensure runtime directories exist
+Path("data/uploads").mkdir(parents=True, exist_ok=True)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Startup / shutdown lifecycle handler (replaces deprecated on_event)."""
+    init_db()          # Create DB tables on startup
+    yield              # App runs here
+    # (add shutdown cleanup here if needed)
+
 
 app = FastAPI(
     title="AI-Powered Image Quality & Defect Detector",
@@ -20,6 +31,7 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
@@ -32,13 +44,5 @@ app.add_middleware(
 
 app.include_router(router)
 
-# Serve uploaded images as static files → /uploads/{result_id}.jpg
-from fastapi.staticfiles import StaticFiles
-import os
-os.makedirs("data/uploads", exist_ok=True)
+# Serve uploaded thumbnails as static files → GET /uploads/{id}.jpg
 app.mount("/uploads", StaticFiles(directory="data/uploads"), name="uploads")
-
-
-@app.on_event("startup")
-def startup():
-    init_db()

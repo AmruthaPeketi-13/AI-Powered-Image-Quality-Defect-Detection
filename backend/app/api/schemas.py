@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class IssueDetail(BaseModel):
@@ -12,6 +12,8 @@ class IssueDetail(BaseModel):
 
 
 class AnalysisResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: str
     filename: str
     quality_score: float
@@ -23,11 +25,10 @@ class AnalysisResponse(BaseModel):
     thumbnail_url: Optional[str] = None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
-
 
 class AnalysisListItem(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: str
     filename: str
     quality_score: float
@@ -35,9 +36,6 @@ class AnalysisListItem(BaseModel):
     issue_count: int
     thumbnail_url: Optional[str] = None
     created_at: datetime
-
-    class Config:
-        from_attributes = True
 
 
 class HealthResponse(BaseModel):

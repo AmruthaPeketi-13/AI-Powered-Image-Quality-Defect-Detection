@@ -1,7 +1,6 @@
 """SQLAlchemy database setup — SQLite by default."""
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import declarative_base, sessionmaker  # declarative_base moved to orm in SA 2.0
 
 from app.config import settings
 

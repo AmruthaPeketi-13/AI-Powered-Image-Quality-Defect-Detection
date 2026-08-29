@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getResults } from '../api/client'
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const LABEL_COLORS = { ACCEPTABLE: '#10b981', DEGRADED: '#f59e0b', DEFECTIVE: '#ef4444' }
 
 export default function HistoryPage() {
@@ -51,7 +50,7 @@ export default function HistoryPage() {
                   <td>
                     {r.thumbnail_url ? (
                       <img
-                        src={`${API_BASE}${r.thumbnail_url}`}
+                        src={r.thumbnail_url}
                         alt={r.filename}
                         style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 6, display: 'block' }}
                         onError={e => { e.target.style.display = 'none' }}
