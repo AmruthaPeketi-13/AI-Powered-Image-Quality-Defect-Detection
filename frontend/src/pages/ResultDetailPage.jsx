@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { getResult } from '../api/client'
+import { getResult, thumbnailUrl } from '../api/client'
 import QualityCard from '../components/QualityCard'
 import IssueList from '../components/IssueList'
 import FeatureStats from '../components/FeatureStats'
@@ -42,7 +42,7 @@ export default function ResultDetailPage() {
         <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'flex-start', gap: '1rem', flexWrap: 'wrap' }}>
         <div className="img-preview-wrap" style={{ flex: '0 0 auto' }}>
           <img 
-            src={`http://localhost:8000${result.thumbnail_url}`} 
+            src={thumbnailUrl(result.thumbnail_url)} 
             className="img-preview" 
             alt="Analyzed image" 
             style={{ maxWidth: 280 }}
