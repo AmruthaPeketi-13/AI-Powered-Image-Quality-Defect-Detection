@@ -7,6 +7,7 @@ venv/
 *.db
 data/clean/
 data/synthetic/
+data/uploads/
 node_modules/
 dist/
 .DS_Store
